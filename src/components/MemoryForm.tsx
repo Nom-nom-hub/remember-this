@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Link from 'next/link';
+import Image from 'next/image';
 
 // Types
 export type MemoryCategory = 'Person' | 'Place' | 'Thing' | 'Moment' | 'Picture';
@@ -240,10 +241,13 @@ export default function MemoryForm({ onSubmit, isSubmitting = false, initialData
             />
             {imagePreview && (
               <div className="relative">
-                <img
+                <Image
                   src={imagePreview}
                   alt="Preview"
+                  width={400}
+                  height={300}
                   className="w-full max-w-sm mx-auto rounded-xl border border-gray-600"
+                  style={{ objectFit: 'contain' }}
                 />
                 <button
                   type="button"
