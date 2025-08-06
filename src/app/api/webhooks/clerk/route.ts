@@ -9,6 +9,9 @@ if (!webhookSecret) {
   throw new Error('Please add CLERK_WEBHOOK_SECRET to your environment variables');
 }
 
+// TypeScript assertion - we know it exists due to the check above
+const secret: string = webhookSecret;
+
 export async function POST(req: Request) {
   const headersList = await headers();
   const svixId = headersList.get('svix-id');
@@ -21,7 +24,7 @@ export async function POST(req: Request) {
 
   const payload = await req.text();
 
-  const wh = new Webhook(webhookSecret);
+  const wh = new Webhook(secret);
 
   let evt: {
     data: {
@@ -53,7 +56,7 @@ export async function POST(req: Request) {
       
       await createUser({
         clerkId: id,
-        email: email_addresses[0]?.email_address || '',
+        email: email_addresses?.[0]?.email_address || '',
         firstName: first_name || '',
         lastName: last_name || '',
       });
@@ -72,7 +75,7 @@ export async function POST(req: Request) {
       const existingUser = await getUserByClerkId(id);
       if (existingUser) {
         await updateUser(id, {
-          email: email_addresses[0]?.email_address || existingUser.email,
+          email: email_addresses?.[0]?.email_address || existingUser.email,
           firstName: first_name || existingUser.firstName,
           lastName: last_name || existingUser.lastName,
         });
